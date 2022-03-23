@@ -1,8 +1,8 @@
-const app = require("express").Router();
+// const app = require("express").Router();
 const mysql = require("mysql2");
 const config = require("../config");
 const cTable = require("console.table");
-
+const { addEmployee } =require("./index");
 const db = mysql.createConnection(
   {
     host: "localhost",
@@ -49,3 +49,4 @@ updateTable = (table) => {
 };
 
 module.exports = { viewTable, addToTable, updateTable };
+module.exports = db;
