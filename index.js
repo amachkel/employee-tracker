@@ -1,4 +1,9 @@
 const inquirer = require("inquirer");
+const {
+  viewTable,
+  addToTable,
+  updateTable,
+} = require("./routes/employeeRoutes");
 
 getChoice = () => {
   inquirer
@@ -15,6 +20,7 @@ getChoice = () => {
           "Add Role",
           "View All Departments",
           "Add Department",
+          "Finished",
         ],
       },
     ])
@@ -24,25 +30,45 @@ getChoice = () => {
       let table = choice[choice.length - 1];
       console.log(`table: ${table}`);
       console.log(`action: ${action}`);
+      let tableName = table.split("").slice(-1);
+      console.log(tableName);
+      if (table.split("").slice(-1) == "s") {
+        let removed = table.split("").pop();
+        table = table.split("").slice(0, -1).join("");
+        console.log(`${removed} has been removed. new table value: ${table}`);
+      }
       return action === "View"
         ? viewTable(table)
         : action === "Add"
         ? addToTable(table)
-        : updateTable(table);
+        : action === "Update"
+        ? updateTable(table)
+        : terminateApp();
     });
 };
 
-viewTable = (table) => {
-  if (table.slice(-1) === "s") {
-    console.log(`view: ${table}`);
-  }
+addEmploye = () => {
+  inquirer.prompt([
+    {
+      type: "input",
+      name: "first",
+      message: "What's the employee's first name?",
+    },
+    {
+      type: "input",
+      name: "last",
+      message: "What's the employee's last name?",
+    },
+    {
+      type: "checkbox",
+      name: "role",
+      message: "What's the employee's role?",
+      choices: [],
+    },
+  ]);
 };
 
-addToTable = (table) => {
-  console.log(`add to: ${table}`);
-};
-
-updateTable = (table) => {
-  console.log(`update: ${table}`);
+terminateApp = () => {
+  console.log("Thank you, goodbye.");
 };
 getChoice();
