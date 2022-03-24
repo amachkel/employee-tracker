@@ -15,7 +15,8 @@ CREATE TABLE role (
     department_id INT,
     FOREIGN KEY (department_id)
     REFERENCES department(id)
-    ON DELETE SET NULL
+    ON DELETE SET NULL,
+    isManagement BOOLEAN
 );
 
 CREATE TABLE employee (
@@ -23,7 +24,7 @@ CREATE TABLE employee (
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
     role_id INT,
-    manager VARCHAR(30) NOT NULL,
+    manager_id VARCHAR(30),
     FOREIGN KEY (role_id)
     REFERENCES role(id)
     ON DELETE SET NULL

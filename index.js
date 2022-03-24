@@ -1,6 +1,8 @@
 const inquirer = require("inquirer");
 const db = require("./config/connection");
 const cTable = require("console.table");
+const SqlQueries = require("./db/sqlQueries");
+
 getChoice = () => {
   inquirer
     .prompt([
@@ -38,7 +40,7 @@ getChoice = () => {
         console.log(`choice: ${choice}`);
       }
       choice == `View all ${table}s`
-        ? viewTable(table)
+        ? viewTable(choice)
         : choice === "Add employee"
         ? addEmployee()
         : choice === "Update employee role"
@@ -56,12 +58,14 @@ getChoice = () => {
         : console.log("error");
     });
 };
-viewTable = (table) => {
-  db.query(`SELECT * FROM ${table}`, (err, results) => {
-    if (err) throw err;
-    console.table(results);
-    console.log("query was reached");
-  });
+viewTable = (choice) => {
+    var sqlQueries = new SqlQueries();
+    if(choice === "View all employees")
+    db.query(sqlQueries.viewEmployees(), (err, results) => {
+        if (err) throw err;
+        console.table(results);
+        console.log("query was reached");
+    });
 };
 addEmployee = () => {
   inquirer
@@ -90,13 +94,35 @@ addEmployee = () => {
         ],
       },
       {
-        type: "input",
+        type: "list",
         name: "manager",
         message: "Who's the employee's manager?",
+        choices: [] // sql query to check isManagement bool, populate choices w/ truthy names
       },
     ])
     .then((data) => {
       console.log(data);
+      const sqlRole = `SELECT role.id FROM role WHERE title = ?`;
+      const paramsRole = data.role;
+      console.log(`paramsRole: ${paramsRole}`);
+      console.log(`sqlRole: ${sqlRole}`);
+      let newData;
+      db.query(sqlRole, paramsRole, (err, results) => {
+        if (err) throw err;
+        console.log(results);
+        newData = data.push({"role_id": `"${results[1]}"`})
+        console.log(newData);
+      });
+        let sqlQueries = new SqlQueries();
+        const getRoleSql = sqlQueries.getRoleByName(data.role);
+        const addEmployeeSql = sqlQueries.addEmployee(data.first, data.last); //this is not complete
+        //`INSERT INTO employee (first_name, last_name, role_id, manager) VALUES (?)`;
+        const params = [`${data.first}, ${data.last}, ${data.role}, ${data.manager}`];
+        db.query(sql, params, (err, results) => {
+          if (err) throw err;
+          console.table(results);
+          console.log("query was reached");
+        });
     });
 };
 
