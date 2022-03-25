@@ -25,12 +25,15 @@ getChoice = () => {
     .then((response) => {
       console.log(response);
       const choice = response.tables[0];
+
+      //console.log(choice);
+
       const choiceArr = choice.split(" ");
       // first word in choice array
       // let action = choiceArr[0];
       // // table is last word in choice array
       let table = choiceArr[choiceArr.length - 1].toLowerCase();
-      console.log(`table: ${table}`);
+      //console.log(`table: ${table}`);
       // console.log(`action: ${action}`);
       // // if last letter is "s", remove it
       // if (table.split("").slice(-1) == "s") {
@@ -39,8 +42,8 @@ getChoice = () => {
       //   console.log(`${removed} has been removed. new table value: ${table}`);
       //   console.log(`choice: ${choice}`);
       // }
-      choice == `View all ${table}`
-        ? viewTable(choice, table)
+      choice.indexOf('View') != -1
+        ? viewTable(choice)
         : choice === "Add employee"
         ? addEmployee()
         : choice === "Update employee role"
@@ -54,15 +57,30 @@ getChoice = () => {
         : console.log("error");
     });
 };
-viewTable = (choice, table) => {
+viewTable = (choice) => {
   const sqlQueries = new SqlQueries();
-  if (choice === "View all employees")
-    db.query(sqlQueries.viewEmployees(), (err, results) => {
-      // must get role_id from employee title
-      if (err) throw err;
-      console.table(results);
-      console.log("query was reached");
-    });
+  let sql = '';
+  if (choice === "View all employees") 
+  {
+    sql = sqlQueries.viewEmployees();
+  } 
+  else if (choice === "View all roles") 
+  {
+    sql = sqlQueries.viewRoles();
+  } 
+  else 
+  {
+    sql = sqlQueries.viewDepartment();
+  }
+  if(sql === '') throw new error('Did not provide valid choice.');
+
+  db.query(sql, (err, results) => {
+    if (err) throw err;
+    console.log('');
+    console.table(results);
+  });
+
+  getChoice();
 };
 addEmployee = () => {
   inquirer

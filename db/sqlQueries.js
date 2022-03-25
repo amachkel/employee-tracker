@@ -12,6 +12,12 @@ class SqlQueries {
       LEFT OUTER JOIN employee e2 ON e2.id = e.manager_id\
         `;
     };
+    this.viewRoles = function () {
+      return `SELECT r.title, r.salary, d.dept_name FROM role r JOIN department d ON d.id = r.department_id`;
+    };
+    this.viewDepartment = function () {
+      return `SELECT * FROM department`;
+    };
     this.getRoleByName = function (roleName) {
       return `SELECT role_id FROM role WHERE title = ${roleName}`;
     };
