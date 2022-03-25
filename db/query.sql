@@ -15,11 +15,30 @@ JOIN role ON employee.role_id = role.id;
 -- +------+-------------------+
 
 -- View all employees
--- id  first_name  last_name  title              role_id
--- --  ----------  ---------  -----------------  -------
--- 1   John        Doe        Lead Engineer      1      
--- 2   Mike        Chan       Software Engineer  2      
--- 3   Ashley      Rodriguez  Account Manager    3      
--- 4   Kat         Vineyard   Accountant         4      
--- 5   Beverly     Kelly      Legal Team Lead    5
--- 6   Tom         Allen      Lawyer             6
+-- first_name  last_name  role_title         dept_name    salary  manager_name
+-- ----------  ---------  -----------------  -----------  ------  ----------------
+-- John        Doe        Lead Engineer      Engineering  150000  null
+-- Mike        Chan       Software Engineer  Engineering  120000  John Doe
+-- Ashley      Rodriguez  Account Manager    Finance      160000  null
+-- Kat         Vineyard   Accountant         Finance      125000  Ashley Rodriguez
+-- Beverly     Kelly      Legal Team Lead    Legal        250000  null
+-- Tom         Allen      Lawyer             Legal        190000  Beverly Kelly
+
+
+-- View all roles
+-- title              salary  dept_name
+-- -----------------  ------  -----------
+-- Lead Engineer      150000  Engineering
+-- Software Engineer  120000  Engineering
+-- Account Manager    160000  Finance
+-- Accountant         125000  Finance
+-- Legal Team Lead    250000  Legal
+-- Lawyer             190000  Legal
+
+-- View all departments
+-- id  dept_name
+-- --  -----------
+-- 1   Engineering
+-- 2   Finance
+-- 3   Legal
+-- 4   Sales
