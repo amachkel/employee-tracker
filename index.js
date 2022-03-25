@@ -27,44 +27,41 @@ getChoice = () => {
       const choice = response.tables[0];
       const choiceArr = choice.split(" ");
       // first word in choice array
-      let action = choiceArr[0];
-      // table is last word in choice array
+      // let action = choiceArr[0];
+      // // table is last word in choice array
       let table = choiceArr[choiceArr.length - 1].toLowerCase();
       console.log(`table: ${table}`);
-      console.log(`action: ${action}`);
-      // if last letter is "s", remove it
-      if (table.split("").slice(-1) == "s") {
-        let removed = table.split("").pop();
-        table = table.split("").slice(0, -1).join("");
-        console.log(`${removed} has been removed. new table value: ${table}`);
-        console.log(`choice: ${choice}`);
-      }
-      choice == `View all ${table}s`
-        ? viewTable(choice)
+      // console.log(`action: ${action}`);
+      // // if last letter is "s", remove it
+      // if (table.split("").slice(-1) == "s") {
+      //   let removed = table.split("").pop();
+      //   table = table.split("").slice(0, -1).join("");
+      //   console.log(`${removed} has been removed. new table value: ${table}`);
+      //   console.log(`choice: ${choice}`);
+      // }
+      choice == `View all ${table}`
+        ? viewTable(choice, table)
         : choice === "Add employee"
         ? addEmployee()
         : choice === "Update employee role"
         ? console.log("calling updateRole()")
-        : // : choice === "View All Roles"
-        // ? console.log("calling viewRoles")
-        choice === "Add role"
+        : choice === "Add role"
         ? console.log("calling addRole()")
-        : // : choice === "View All Departments"
-        // ? console.log("calling viewDepartments()")
-        choice === "Add department"
+        : choice === "Add department"
         ? console.log("calling addDept()")
         : choice === "Finished"
         ? terminateApp()
         : console.log("error");
     });
 };
-viewTable = (choice) => {
-    var sqlQueries = new SqlQueries();
-    if(choice === "View all employees")
+viewTable = (choice, table) => {
+  const sqlQueries = new SqlQueries();
+  if (choice === "View all employees")
     db.query(sqlQueries.viewEmployees(), (err, results) => {
-        if (err) throw err;
-        console.table(results);
-        console.log("query was reached");
+      // must get role_id from employee title
+      if (err) throw err;
+      console.table(results);
+      console.log("query was reached");
     });
 };
 addEmployee = () => {
@@ -97,32 +94,56 @@ addEmployee = () => {
         type: "list",
         name: "manager",
         message: "Who's the employee's manager?",
-        choices: [] // sql query to check isManagement bool, populate choices w/ truthy names
+        choices: ["John Doe"], // sql query to check isManagement bool, populate choices w/ truthy names
       },
     ])
     .then((data) => {
-      console.log(data);
-      const sqlRole = `SELECT role.id FROM role WHERE title = ?`;
-      const paramsRole = data.role;
-      console.log(`paramsRole: ${paramsRole}`);
-      console.log(`sqlRole: ${sqlRole}`);
-      let newData;
-      db.query(sqlRole, paramsRole, (err, results) => {
-        if (err) throw err;
-        console.log(results);
-        newData = data.push({"role_id": `"${results[1]}"`})
-        console.log(newData);
-      });
-        let sqlQueries = new SqlQueries();
-        const getRoleSql = sqlQueries.getRoleByName(data.role);
-        const addEmployeeSql = sqlQueries.addEmployee(data.first, data.last); //this is not complete
-        //`INSERT INTO employee (first_name, last_name, role_id, manager) VALUES (?)`;
-        const params = [`${data.first}, ${data.last}, ${data.role}, ${data.manager}`];
-        db.query(sql, params, (err, results) => {
+      const sqlQueries = new SqlQueries();
+      const getRoleSql = db.query(
+        sqlQueries.getRoleByName(data.role),
+        (err, results) => {
           if (err) throw err;
-          console.table(results);
-          console.log("query was reached");
-        });
+          console.dir(results);
+          return results;
+        }
+      );
+      const getMngrSql = db.query(
+        sqlQueries.getManagerIdByFirstNameLastName(data.manager),
+        (err, results) => {
+          if (err) throw err;
+          const mngrID = [];
+          const mngrArr = Object.entries(results);
+          mngrArr.forEach(([key, value]) => {
+            mngrID.push(key, value);
+          });
+          console.log(mngrID);
+          return mngrID;
+        }
+      );
+      const addEmployeeSql = db.query(
+        sqlQueries.addEmployee(data.first, data.last, getRoleSql, getMngrSql),
+        (err, results) => {
+          if (err) throw err;
+          let addEmp = [];
+          results.forEach((item) => {
+            addEmp.push(item);
+          });
+          console.log(addEmp);
+          return addEmp;
+        }
+      );
+      //this is not complete
+      console.log(`getMngr: ${getMngrSql}`);
+      console.log(`getRole: ${getRoleSql}`);
+      console.log(`addEmployee: ${addEmployeeSql}`);
+      console.table(addEmployeeSql);
+      //`INSERT INTO employee (first_name, last_name, role_id, manager) VALUES (?)`;
+      // const params = [`${data.first}, ${data.last}, ${data.role}, ${data.manager}`];
+      // db.query(sql, params, (err, results) => {
+      //   if (err) throw err;
+      //   console.table(results);
+      //   console.log("query was reached");
+      // });
     });
 };
 
