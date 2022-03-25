@@ -2,16 +2,17 @@ class SqlQueries {
   constructor() {
     this.viewEmployees = function () {
       return `
-        SELECT employee.role_id AS id,\
-        employee.first_name,\
-        employee.last_name,\
-        role.title AS title\
-        FROM employee\
-        JOIN role ON employee.role_id = role.id;\
+      SELECT\
+      e.first_name,\ 
+      e.last_name,\ 
+      r.title,\ 
+      CONCAT(e2.first_name, ' ', e2.last_name ) AS manager_name\
+      FROM employee e\
+      JOIN role r ON r.id = e.role_id\
+      LEFT OUTER JOIN employee e2 ON e2.id = e.manager_id\
         `;
     };
     this.getRoleByName = function (roleName) {
-      //fix the syntax here
       return `SELECT role_id FROM role WHERE title = ${roleName}`;
     };
     this.getManagerEmployees = function () {
@@ -29,3 +30,18 @@ class SqlQueries {
 }
 
 module.exports = SqlQueries;
+
+//old
+/*SELECT * FROM (SELECT employee.id AS id,\
+        employee.first_name,\
+        employee.last_name,\
+        role.title AS title,\
+        role.id AS role_id,\
+        role.isManagement,\
+        employee.manager_id,\
+        managers.first_name,\
+        managers.last_name\
+        FROM employee\
+        JOIN role ON employee.role_id = role.id) as allEmployees\
+        JOIN (SELECT * FROM employee) as managers\
+        ON allEmployees.id = managers.id*/
