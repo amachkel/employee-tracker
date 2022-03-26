@@ -41,6 +41,9 @@ class SqlQueries {
     this.addRole = function (title, salary, department_id, isManagement) {
       return `INSERT INTO role(title, salary, department_id, isManagement) VALUES ("${title}", ${salary}, ${department_id}, ${isManagement})`;
     };
+    this.addDepartment = function (department) {
+      return `INSERT INTO department (dept_name) VALUES ("${department}")`;
+    };
   }
 }
 

@@ -45,7 +45,7 @@ getChoice = () => {
         : choice === "Add role"
         ? addRole()
         : choice === "Add department"
-        ? console.log("calling addDept()")
+        ? addDepartment()
         : choice === "Finished"
         ? terminateApp()
         : console.log("error");
@@ -135,7 +135,7 @@ function addEmployee() {
                   ),
                   (err, results) => {
                     if (err) throw err;
-                    console.log("created employee");
+                    console.log("Added employee to the database.");
                     getChoice();
                   }
                 );
@@ -145,6 +145,7 @@ function addEmployee() {
       });
     });
 }
+
 addRole = () => {
   let roleObj = {};
   db.query(sql.viewDepartment(), (err, results) => {
@@ -165,7 +166,7 @@ addRole = () => {
       ])
       .then((deptChoice) => {
         console.log(deptChoice);
-        console.log(deptChoice.department)
+        console.log(deptChoice.department);
         roleObj.deptId = deptChoice.department;
 
         inquirer
@@ -206,6 +207,26 @@ addRole = () => {
           });
       });
   });
+};
+
+addDepartment = () => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "department",
+        message: "What is the name of the department?",
+      },
+    ])
+    .then((data) => {
+      console.log(data)
+      console.log(data.department)
+      db.query(sql.addDepartment(data.department), (err, results) => {
+        if (err) throw err;
+        console.log("Added department to the database.");
+        getChoice();
+      });
+    });
 };
 
 terminateApp = () => {
