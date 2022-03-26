@@ -22,18 +22,18 @@ class SqlQueries {
       return `SELECT * FROM department`;
     };
     this.getRoleByName = function (roleName) {
-      return `SELECT role_id FROM role WHERE title = ${roleName}`;
+      return `SELECT id FROM role WHERE title = "${roleName}"`;
     };
     this.getManagerEmployees = function () {
       return `SELECT * FROM employee\
         JOIN role on employee.role_id = role.Id\
         WHERE role.isManagement = true`;
     };
-    this.getManagerIdByFirstNameLastName = function (firstName, lastName) {
-      return `SELECT id FROM employee WHERE first_name = ${firstName} AND last_name = ${lastName}`;
+    this.getManagerIdByName = function (firstName, lastName) {
+      return `SELECT id FROM employee WHERE first_name = "${firstName}" AND last_name = "${lastName}"`;
     };
     this.addEmployee = function (firstName, lastName, roleID, managerID) {
-      return `INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES (${firstName}, ${lastName}, ${roleID}, ${managerID})`;
+      return `INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES ("${firstName}", "${lastName}", ${roleID}, ${managerID})`;
     };
   }
 }
