@@ -35,7 +35,7 @@ getChoice = () => {
     ])
     .then((response) => {
       const choice = response.choices[0];
-      // console.log(`indexOf: ${choice.indexOf("View")}`);
+
       choice.indexOf("View") != -1
         ? viewTable(choice)
         : choice === "Add employee"
@@ -98,8 +98,8 @@ function addEmployee() {
           "Lawyer",
         ],
       },
-    ]) // data object: {first, last, role, manager}
-    // role: SELECT r.id FROM role r JOIN r.id =
+    ])
+
     .then((data) => {
       empObj.firstName = data.first;
       empObj.lastName = data.last;
@@ -113,7 +113,7 @@ function addEmployee() {
               type: "list",
               name: "manager",
               message: "Who's the employee's manager?",
-              choices: ["John Doe", "Ashley Rodriguez", "Beverly Kelly"], // sql query to check isManagement bool, populate choices w/ truthy names
+              choices: ["John Doe", "Ashley Rodriguez", "Beverly Kelly"], // needs sql query to check isManagement bool, populate choices w/ truthy names
             },
           ])
           .then((data) => {
@@ -143,31 +143,6 @@ function addEmployee() {
             );
           });
       });
-      //now we need to query the roles
-      //.then((roles) =>{
-      // now we need to query the managers
-      //  .then((managers) => {
-      //convert obj to array
-      //const propertyValues = Object.values(empObj);
-      //now we need to add the employee.
-      //}
-      //}
-
-      // let createdEmployee;
-      // db.query(
-      //   sql.addEmployee(data.first, data.last, addUserRoleId, addUserManagerId),
-      //   (err, results) => {
-      //     if (err) throw err;
-
-      //     createdEmployee = results[0];
-      //     console.log(createdEmployee);
-      //   }
-      // );
-      //this is not complete
-      // console.log(`getMngr: ${getMngrSql}`);
-      // console.log(`getRole: ${getRoleSql}`);
-      // console.log(`addEmployee: ${addEmployeeSql}`);
-      // console.table(addEmployeeSql);
     });
 }
 

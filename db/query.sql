@@ -1,7 +1,3 @@
-SELECT
-    employee.role_id AS id, role.title AS title
-FROM employee
-JOIN role ON employee.role_id = role.id;
 -- JOIN role & employee
 -- +------+-------------------+
 -- | id   | title             |
