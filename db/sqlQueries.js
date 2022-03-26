@@ -24,6 +24,9 @@ class SqlQueries {
     this.getRoleByName = function (roleName) {
       return `SELECT id FROM role WHERE title = "${roleName}"`;
     };
+    this.getDepartmentByName = function (department) {
+      return `SELECT id FROM department WHERE name = "${department}"`;
+    };
     this.getManagerEmployees = function () {
       return `SELECT * FROM employee\
         JOIN role on employee.role_id = role.Id\
@@ -34,6 +37,9 @@ class SqlQueries {
     };
     this.addEmployee = function (firstName, lastName, roleID, managerID) {
       return `INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES ("${firstName}", "${lastName}", ${roleID}, ${managerID})`;
+    };
+    this.addRole = function (title, salary, department_id, isManagement) {
+      return `INSERT INTO role(title, salary, department_id, isManagement) VALUES ("${title}", ${salary}, ${department_id}, ${isManagement})`;
     };
   }
 }

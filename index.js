@@ -43,7 +43,7 @@ getChoice = () => {
         : choice === "Update employee role"
         ? console.log("calling updateRole()")
         : choice === "Add role"
-        ? console.log("calling addRole()")
+        ? addRole()
         : choice === "Add department"
         ? console.log("calling addDept()")
         : choice === "Finished"
@@ -145,6 +145,68 @@ function addEmployee() {
       });
     });
 }
+addRole = () => {
+  let roleObj = {};
+  db.query(sql.viewDepartment(), (err, results) => {
+    if (err) throw err;
+    console.log(`view dept: ${results}`);
+    let viewDepartment = [];
+    results.forEach((dept) => {
+      viewDepartment.push({ name: dept.dept_name, value: dept.id });
+    });
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "department",
+          message: "Which department does this role belong to?",
+          choices: viewDepartment,
+        },
+      ])
+      .then((deptChoice) => {
+        console.log(deptChoice);
+        console.log(deptChoice.department)
+        roleObj.deptId = deptChoice.department;
+
+        inquirer
+          .prompt([
+            {
+              type: "input",
+              name: "title",
+              message: "What role would you like to add?",
+            },
+            {
+              type: "input",
+              name: "salary",
+              message: "What is the salary for this role?",
+            },
+            {
+              type: "confirm",
+              name: "isManagement",
+              message: "Is this a management position?",
+            },
+          ])
+          .then((data) => {
+            roleObj.title = data.title;
+            roleObj.salary = data.salary;
+            roleObj.isManagement = data.isManagement;
+            db.query(
+              sql.addRole(
+                roleObj.title,
+                roleObj.salary,
+                roleObj.deptId,
+                roleObj.isManagement
+              ),
+              (err, results) => {
+                if (err) throw err;
+                console.log("created role");
+                getChoice();
+              }
+            );
+          });
+      });
+  });
+};
 
 terminateApp = () => {
   console.log("Thank you, goodbye.");
