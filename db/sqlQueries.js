@@ -15,25 +15,24 @@ class SqlQueries {
       LEFT OUTER JOIN employee e2 ON e2.id = e.manager_id\
         `;
     };
+    this.viewEmployeeTable = function () {
+      return `SELECT * FROM employee`;
+    };
+    this.updateEmployee = function (employee, role) {
+      return `UPDATE employee SET role_id = ${role} WHERE id = ${employee}`;
+    };
+    this.roleNames = function () {
+      return `SELECT * FROM role`;
+    };
     this.viewRoles = function () {
       return `SELECT r.title, r.salary, d.dept_name FROM role r JOIN department d ON d.id = r.department_id`;
     };
     this.viewDepartment = function () {
       return `SELECT * FROM department`;
     };
-    this.getRoleByName = function (roleName) {
-      return `SELECT id FROM role WHERE title = "${roleName}"`;
-    };
-    this.getDepartmentByName = function (department) {
-      return `SELECT id FROM department WHERE name = "${department}"`;
-    };
     this.getManagerEmployees = function () {
       return `SELECT * FROM employee\
-        JOIN role on employee.role_id = role.Id\
-        WHERE role.isManagement = true`;
-    };
-    this.getManagerIdByName = function (firstName, lastName) {
-      return `SELECT id FROM employee WHERE first_name = "${firstName}" AND last_name = "${lastName}"`;
+        WHERE manager_id IS NULL`;
     };
     this.addEmployee = function (firstName, lastName, roleID, managerID) {
       return `INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES ("${firstName}", "${lastName}", ${roleID}, ${managerID})`;

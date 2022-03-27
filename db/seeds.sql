@@ -1,8 +1,7 @@
 INSERT INTO department (dept_name)
 VALUES  ("Engineering"),
         ("Finance"),
-        ("Legal"),
-        ("Sales");
+        ("Legal");
 -- How to pull department_id without hardcoding
 INSERT INTO role (title, salary, department_id)
 VALUES  ("Lead Engineer", 150000, 1),
