@@ -1,5 +1,5 @@
 # Employee Tracker
-Developers frequently have to create interfaces that allow non-developers to easily view and interact with information stored in databases. These interfaces are called content management systems (CMS). This is a command-line application built from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL.
+Developers frequently have to create interfaces that allow non-developers to easily view and interact with information stored in databases. These interfaces are called content management systems (CMS). This is a command-line application built from scratch to manage a company's employee database, using Node.js, the npm package Inquirer, and MySQL.
 ## Table Of Contents 
 
  - [installation](#installation)
@@ -9,21 +9,15 @@ Developers frequently have to create interfaces that allow non-developers to eas
  - [tests](#tests)
 
 ## Installation
-  run the following commands to install the required packages:
+  run the following commands to install the required packages listed in the package.json:
   
   Node:
-  ``npm init -y ``
   
   ``npm i``
    
-MySql:
- ``npm i mysql2``
-    
-Inquirer:
-``npm i inquirer``
-    
-Console Table:
-``npm i console.table --save``
+In order to use this app, you must have MySQL and NodeJS installed locally.
+
+Create a .env file to house your MySQL username, password, and the name of the database.
 
  ## Usage
  
